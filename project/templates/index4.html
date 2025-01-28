@@ -1,0 +1,977 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Book Recommendation System</h1>
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="query">Enter a Book Title or Description:</label>
+                <input type="text" id="query" name="query" class="form-control" placeholder="Type here..." value="{{ query }}" required>
+            </div>
+            <div class="form-group">
+                <label for="top_n">Number of Recommendations:</label>
+                <select id="top_n" name="top_n" class="form-control">
+                    <option value="5" {% if query and 'top_n' == 5 %}selected{% endif %}>5</option>
+                    <option value="10" {% if query and 'top_n' == 10 %}selected{% endif %}>10</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Get Recommendations</button>
+        </form>
+
+        {% if recommendations %}
+            <h3 class="mt-5">Recommendations for: "{{ query }}"</h3>
+            <ul class="list-group mt-3">
+                {% for book in recommendations %}
+                    <li class="list-group-item">
+                        <strong>{{ book.Title }}</strong> by {{ book.Authors }} <br>
+                        <em>Category:</em> {{ book.Category }} <br>
+                        <em>Description:</em> {{ book.Description }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif query %}
+            <div class="alert alert-warning mt-5">No recommendations found for your input.</div>
+        {% endif %}
+    </div>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Book Recommendation System</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+                    <div class="form-group">
+                        <label for="query">Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Book-Title'] }}</strong> by {{ book['Book-Author'] }} <br>
+                                <em>Publisher:</em> {{ book['Publisher'] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Book-Title'] }}</strong> by {{ book['Book-Author'] }} <br>
+                                <em>Publisher:</em> {{ book['Publisher'] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+
+<!-- Working version 1 -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Book Recommendation System</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+                    <div class="form-group">
+                        <label for="query">Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by {{ book['Authors'] }} <br>
+                                <em>Genre:</em> {{ book['Category'] }} <br>
+                                <em>Description:</em> {{ book['Description'] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by {{ book['Authors'] }} <br>
+                                <em>Genre:</em> {{ book['Category'] }} <br>
+                                <em>Description:</em> {{ book['Description'] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+
+<!-- working version 2 -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            font-family: 'Georgia', serif;
+            color: #343a40;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: #ffffff !important;
+            border-radius: 5px 5px 0 0;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: none;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-left: 5px solid #007bff;
+            transition: transform 0.2s ease;
+        }
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #e9ecef;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">📚 Book Recommendation System</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+                    <div class="form-group">
+                        <label for="query">🔍 Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">📊 Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">📖 Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">⚠️ No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">🔎 Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+
+<!-- working version 3 -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: 'Arial', sans-serif;
+            color: #495057;
+        }
+        h1 {
+            font-family: 'Georgia', serif;
+            color: #343a40;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .nav-tabs .nav-link {
+            background-color: #f8f9fa;
+            color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 5px 5px 0 0;
+        }
+        .nav-tabs .nav-link:hover {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-block {
+            border-radius: 5px;
+        }
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: none;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-left: 5px solid #007bff;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #e9ecef;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+        .badge-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .tab-content {
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">📚 Book Recommendation System</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+     
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+                    <div class="form-group">
+                        <label for="query">🔍 Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">📊 Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">📖 Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">⚠️ No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">🔎 Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #e0f7fa; /* Changed */
+            font-family: 'Arial', sans-serif;
+            color: #495057;
+        }
+        h1 {
+            font-family: 'Georgia', serif;
+            color: #00695c; /* Changed */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .nav-tabs .nav-link {
+            background-color: #e0f7fa; /* Changed */
+            color: #00796b; /* Changed */
+            border: 2px solid #00796b; /* Changed */
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #009688; /* Changed */
+            color: #ffffff;
+            border: 2px solid #009688; /* Changed */
+            border-radius: 5px 5px 0 0;
+        }
+        .nav-tabs .nav-link:hover {
+            background-color: #009688; /* Changed */
+            color: #ffffff;
+        }
+        .btn-primary {
+            background-color: #009688; /* Changed */
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #00796b; /* Changed */
+        }
+        .btn-block {
+            border-radius: 5px;
+        }
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: none;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-left: 5px solid #009688; /* Changed */
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #e9ecef;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background-color: #e0f7fa; /* Changed */
+            color: #856404;
+            font-weight: bold;
+        }
+        .badge-primary {
+            background-color: #009688; /* Changed */
+            color: #fff;
+        }
+        .tab-content {
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">NextPage</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+                    <div class="form-group">
+                        <label for="query">🔍 Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">📊 Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">📖 Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">⚠️ No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">🔎 Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+<!-- working version 5 -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #e0f7fa; /* Changed */
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            font-family: 'Georgia', serif;
+            color: #00695c; /* Changed */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #009688; /* Changed */
+            color: #ffffff !important;
+            border-radius: 5px 5px 0 0;
+        }
+        .nav-tabs .nav-link {
+            color: #00796b; /* Changed */
+        }
+        .btn-primary {
+            background-color: #009688; /* Changed */
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #00796b; /* Changed */
+        }
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: none;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-left: 5px solid #009688; /* Changed */
+            transition: transform 0.2s ease;
+        }
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #e9ecef;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background-color: #e0f7fa; /* Changed */
+            color: #856404;
+            font-weight: bold;
+        }
+        .badge-primary {
+            background-color: #009688; /* Changed */
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">📚 NextPage</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+ <div class="form-group">
+                        <label for="query">🔍 Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">📊 Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">📖 Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">⚠️ No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">🔎 Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+
+<!-- working version 4 -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            font-family: 'Georgia', serif;
+            color: #343a40;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: #ffffff !important;
+            border-radius: 5px 5px 0 0;
+        }
+        .nav-tabs .nav-link {
+            color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: none;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-left: 5px solid #007bff;
+            transition: transform 0.2s ease;
+        }
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #e9ecef;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+        .badge-primary {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">📚 Book Recommendation System</h1>
+        <ul class="nav nav-tabs mt-4" id="recommendationTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="content-based-tab" data-toggle="tab" href="#content-based" role="tab" aria-controls="content-based" aria-selected="true">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaborative-tab" data-toggle="tab" href="#collaborative" role="tab" aria-controls="collaborative" aria-selected="false">Collaborative</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="recommendationTabsContent">
+
+            <div class="tab-pane fade show active" id="content-based" role="tabpanel" aria-labelledby="content-based-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="content-based">
+                    <div class="form-group">
+                        <label for="query">🔍 Enter a Book Title or Description:</label>
+                        <input type="text" id="query" name="book_title" class="form-control" placeholder="Type here..." value="{{ book_title }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="top_n">📊 Number of Recommendations:</label>
+                        <select id="top_n" name="top_n" class="form-control">
+                            <option value="5" {% if book_title and 'top_n' == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if book_title and 'top_n' == 10 %}selected{% endif %}>10</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Recommendations</button>
+                </form>
+
+                {% if content_recommendations %}
+                    <h3 class="mt-5">📖 Content-Based Recommendations for: "{{ book_title }}"</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in content_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif book_title %}
+                    <div class="alert alert-warning mt-5">⚠️ No recommendations found for your input.</div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade" id="collaborative" role="tabpanel" aria-labelledby="collaborative-tab">
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="collaborative">
+                    <button type="submit" class="btn btn-primary btn-block">✨ Get Collaborative Recommendations</button>
+                </form>
+
+                {% if collab_recommendations %}
+                    <h3 class="mt-5">🔎 Collaborative Recommendations (Mystery Genre)</h3>
+                    <ul class="list-group mt-3">
+                        {% for book in collab_recommendations %}
+                            <li class="list-group-item">
+                                <strong>{{ book['Title'] }}</strong> by <em>{{ book['Authors'] }}</em> <br>
+                                <span class="badge badge-primary">Genre: {{ book['Category'] }}</span> <br>
+                                <p class="mt-2"><em>Description:</em> {{ book['Description'] }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html> -->

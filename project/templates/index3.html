@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .tab {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #0056b3;
+        }
+        .content {
+            display: none;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .content.active {
+            display: block;
+        }
+        .recommendation-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <h1>Book Recommendation System</h1>
+    <div class="tabs">
+        <div class="tab active" data-tab="collaborative" onclick="showTab('collaborative')">Collaborative</div>
+        <div class="tab" data-tab="content-based" onclick="showTab('content-based')">Content-Based</div>
+    </div>
+
+    <div id="collaborative" class="content active">
+        <h2>Mystery Genre Books</h2>
+        {% if collab_recommendations %}
+            {% for book in collab_recommendations %}
+            <div class="recommendation-item">
+                <strong>Title:</strong> {{ book['Book-Title'] }}<br>
+                <strong>Author:</strong> {{ book['Book-Author'] }}<br>
+                <strong>Publisher:</strong> {{ book['Publisher'] }}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No recommendations available.</p>
+        {% endif %}
+    </div>
+
+    <div id="content-based" class="content">
+        <h2>Content-Based Recommendations</h2>
+        <form method="POST">
+            <label for="book_title">Enter Book Title:</label><br>
+            <input type="text" id="book_title" name="book_title" placeholder="Query" required><br>
+            <label for="top_n">Number of Recommendations:</label><br>
+            <input type="number" id="top_n" name="top_n" value="5" min="1"><br>
+            <button type="submit" name="action" value="content-based">Get Recommendations</button>
+        </form>
+        {% if content_recommendations %}
+        <div class="recommendations">
+            <h3>Recommendations for "{{ book_title }}":</h3>
+            {% for book in content_recommendations %}
+            <div class="recommendation-item">
+                <strong>Title:</strong> {{ book['Book-Title'] }}<br>
+                <strong>Author:</strong> {{ book['Book-Author'] }}<br>
+                <strong>Publisher:</strong> {{ book['Publisher'] }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

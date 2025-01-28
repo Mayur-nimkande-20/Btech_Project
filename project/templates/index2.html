@@ -1,0 +1,144 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Book Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form input, form button {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+        }
+        form button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 15px 0;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .no-recommendations {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Collaborative Book Recommendation</h1>
+        <form method="POST">
+            <input type="text" name="user_id" placeholder="Enter User ID" required>
+            <input type="number" name="top_n" placeholder="Number of Recommendations" value="5" min="1" max="20">
+            <button type="submit">Get Recommendations</button>
+        </form>
+        {% if recommendations %}
+            <h2>Recommendations for User ID: {{ user_id }}</h2>
+            <ul>
+                {% for book in recommendations %}
+                    <li>
+                        <strong>{{ book['Book-Title'] }}</strong> by {{ book['Book-Author'] }} <br>
+                        Publisher: {{ book['Publisher'] }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif user_id %}
+            <p class="no-recommendations">No recommendations found for User ID: {{ user_id }}</p>
+        {% endif %}
+    </div>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        .recommendations {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .recommendation-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Recommendation System</h1>
+    <form method="POST">
+        <label for="user_id">Enter User ID:</label><br>
+        <input type="text" id="user_id" name="user_id" placeholder="User ID" required><br>
+        <label for="top_n">Number of Recommendations:</label><br>
+        <input type="number" id="top_n" name="top_n" value="5" min="1"><br>
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    {% if recommendations %}
+    <div class="recommendations">
+        <h2>Recommendations for User {{ user_id }}:</h2>
+        {% for book in recommendations %}
+        <div class="recommendation-item">
+            <strong>Title:</strong> {{ book['Book-Title'] }}<br>
+            <strong>Author:</strong> {{ book['Book-Author'] }}<br>
+            <strong>Publisher:</strong> {{ book['Publisher'] }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Book Recommendation System</h1>
+        <form action="/recommend" method="POST">
+            <input type="text" name="query" placeholder="Enter your query" required>
+            <input type="number" name="top_n" placeholder="Number of recommendations" value="5" min="1" max="20">
+            <button type="submit">Get Recommendations</button>
+        </form>
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        form input, form button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 80%;
+        }
+        form button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 15px 0;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book Recommendation System</h1>
+        <form method="POST">
+            <input type="text" name="query" placeholder="Enter your query" required>
+            <input type="number" name="top_n" placeholder="Number of recommendations" value="5" min="1" max="20">
+            <button type="submit">Get Recommendations</button>
+        </form>
+        {% if recommendations %}
+            <h2>Recommendations for "{{ query }}"</h2>
+            <ul>
+                {% for book in recommendations %}
+                    <li>
+                        <strong>{{ book.Title }}</strong> by {{ book.Authors }} <br>
+                        Genre: {{ book.Category }} <br>
+                        {{ book.Description }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif query %}
+            <p>No recommendations found. Please try a different query.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .controls select, .controls button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .controls button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .controls button:hover {
+            background-color: #45a049;
+        }
+
+        .table_div {
+            width: 100%;
+            overflow-x: auto;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            max-width: 1200px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #4CAF50;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        table tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        table td {
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+            table th, table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Prediction Result</h1>
+    
+    <!-- Controls for Day Selection and Download -->
+    <div class="controls">
+        <label for="days">Select Number of Days:</label>
+        <select id="days" onchange="filterDays()">
+            <option value="all">All</option>
+            <option value="3">3 Days</option>
+            <option value="7">7 Days</option>
+            <option value="14">14 Days</option>
+            <option value="30">30 Days</option>
+        </select>
+        <button onclick="downloadCSV()">Download Predictions</button>
+    </div>
+
+    <!-- Prediction Table -->
+    <div class="table_div">
+        <table id="predictionTable">
+            <thead>
+                <tr>
+                    <th>Max Temp</th>
+                    <th>Min Temp</th>
+                    <th>Feels Like Min Temp</th>
+                    <th>Feels Like Max Temp</th>
+                    <th>Humidity</th>
+                    <th>Temperature</th>
+                    <th>Wind Speed</th>
+                    <th>Predicted Power Demand</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic Rows -->
+                {% for row in result %}
+                <tr>
+                    <td>{{ row.tempmax }}</td>
+                    <td>{{ row.tempmin }}</td>
+                    <td>{{ row.feelslikemin }}</td>
+                    <td>{{ row.feelslikemax }}</td>
+                    <td>{{ row.humidity }}</td>
+                    <td>{{ row.temp }}</td>
+                    <td>{{ row.windspeed }}</td>
+                    <td>{{ row.Predicted_Power_Demand }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/">Go Back</a>
+
+    <script>
+        // Download predictions as CSV
+        function downloadCSV() {
+            let table = document.getElementById('predictionTable');
+            let rows = table.querySelectorAll('tr');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            rows.forEach(row => {
+                let cols = row.querySelectorAll('th, td');
+                let rowData = Array.from(cols).map(col => col.innerText).join(",");
+                csvContent += rowData + "\n";
+            });
+
+            let link = document.createElement('a');
+            link.setAttribute('href', encodeURI(csvContent));
+            link.setAttribute('download', 'predictions.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Filter table rows based on selected days
+        function filterDays() {
+            let days = document.getElementById('days').value;
+            let table = document.getElementById('predictionTable');
+            let rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach((row, index) => {
+                if (days === "all" || index < days) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

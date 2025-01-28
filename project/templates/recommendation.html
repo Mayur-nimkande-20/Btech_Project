@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Recommendations for "{{ query }}"</h1>
+        {% if recommendations %}
+            <ul>
+                {% for book in recommendations %}
+                    <li>
+                        <strong>{{ book.Title }}</strong> by {{ book.Authors }} <br>
+                        Genre: {{ book.Category }} <br>
+                        {{ book.Description }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No recommendations found. Please try a different query.</p>
+        {% endif %}
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
